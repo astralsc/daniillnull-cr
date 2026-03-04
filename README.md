@@ -4,6 +4,7 @@ An old 2017 leak of the Null's Royale source code, don't even use this for produ
 What I changed:
 - Fixed crashing problem
 - Fixed other logic
+- Replaced libsodium with RC4
 - etc
 
 Version: 1.7.X     
