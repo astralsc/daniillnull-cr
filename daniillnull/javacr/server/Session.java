@@ -161,9 +161,9 @@ public class Session implements Runnable {
             }
 
             if (pk instanceof LeaveAlliance) {
-               AllianceChatMessage message = AllianceChatMessage.createEvent(4, this.player, "");
+               AllianceChatMessage message_0 = AllianceChatMessage.createEvent(4, this.player, "");
                this.player.all.players.remove(this.player);
-               this.player.all.addMessage(message);
+               this.player.all.addMessage(message_0);
                if (this.player.role == 2 && this.player.all.players.size() > 0) {
                   ((Player)this.player.all.players.get(0)).role = 2;
                }

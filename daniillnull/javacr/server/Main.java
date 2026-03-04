@@ -39,6 +39,7 @@ public class Main {
          }
       }, 1000L, 20000L);
       ServerSocket ss = new ServerSocket(9339);
+      System.out.println("Server started on port 9339!");
 
       while(ss.isBound()) {
          Socket s = ss.accept();

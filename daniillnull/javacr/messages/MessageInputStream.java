@@ -33,6 +33,7 @@ public class MessageInputStream {
 
    public Packet read() throws IOException {
       int type = this.is.readChar();
+      System.out.println("Gotcha " + type + " packet!");
       int length = this.is.read() << 16 | this.is.read() << 8 | this.is.read();
       char version = this.is.readChar();
       byte[] data = new byte[length];
@@ -40,56 +41,52 @@ public class MessageInputStream {
       data = this.cr.decrypt(data, type);
       Packet p = null;
       switch(type) {
-      case '❴':
+      case 10100:
          p = new SessionReq();
          break;
-      case '❵':
+      case 10101:
          p = new Login();
          break;
-      case '❻':
-      case '⪙':
-         return this.read();
-      case '❼':
+      case 10108:
          p = new KeepAlive();
          break;
-      case '⟤':
-      case '㤈':
+      case 10212:
          p = new SetName();
          break;
-      case '㜕':
+      case 14101:
          p = new GetHomeData();
          break;
-      case '㜖':
+      case 14102:
          p = new ExecuteCmd();
          break;
-      case '㜘':
+      case 14104:
          p = new StartMission();
          break;
-      case '㜡':
+      case 14113:
          p = new GetProfileData();
          break;
-      case '㟝':
+      case 14301:
          p = new CreateAlliance();
          break;
-      case '㟞':
+      case 14302:
          p = new GetAllianceData();
          break;
-      case '㟟':
+      case 14303:
          p = new GetJoinableAlliances();
          break;
-      case '㟡':
+      case 14305:
          p = new JoinAlliance();
          break;
-      case '㟢':
+      case 14306:
          p = new PromoteAllianceMember();
          break;
-      case '㟤':
+      case 14308:
          p = new LeaveAlliance();
          break;
-      case '㟫':
+      case 14315:
          p = new SendAllianceMessage();
          break;
-      case '㟬':
+      case 14316:
          p = new ChangeAlliance();
          break;
       default:
