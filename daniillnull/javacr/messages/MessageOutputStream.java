@@ -1,26 +1,42 @@
 package daniillnull.javacr.messages;
 
-import daniillnull.javacr.encryption2v.Crypt;
+import daniillnull.javacr.cryptorc4.CryptoRC4;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
 public class MessageOutputStream {
    public DataOutputStream is;
-   public Crypt cr;
+   public CryptoRC4 cr;
 
-   public MessageOutputStream(OutputStream is, Crypt cr) {
+   public MessageOutputStream(OutputStream is, CryptoRC4 cr) {
       this.is = new DataOutputStream(is);
       this.cr = cr;
    }
 
    public void write(Packet p) throws IOException {
       p.process();
-      p.data = this.cr.encrypt(p.data, p.id);
+
+      if (p.data == null) {
+         System.err.println("Packet " + p.id + " has null data, skipping write.");
+         return;
+      }
+
+      byte[] encrypted = this.cr.encrypt(p.data, p.id);
+      if (encrypted == null) {
+         System.err.println("Encryption failed for packet " + p.id);
+         return;
+      }
+
+      p.data = encrypted;
+
       this.is.writeChar((char)p.id);
-      this.is.write(p.data.length >>> 16);
-      this.is.write(p.data.length >>> 8);
-      this.is.write(p.data.length >>> 0);
+
+      int len = p.data.length;
+      this.is.write((len >>> 16) & 0xFF);
+      this.is.write((len >>> 8) & 0xFF);
+      this.is.write(len & 0xFF);
+
       this.is.writeChar(p.version);
       this.is.write(p.data);
    }

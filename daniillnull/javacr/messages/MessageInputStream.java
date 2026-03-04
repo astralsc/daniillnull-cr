@@ -1,6 +1,6 @@
 package daniillnull.javacr.messages;
 
-import daniillnull.javacr.encryption2v.Crypt;
+import daniillnull.javacr.cryptorc4.CryptoRC4;
 import daniillnull.javacr.messages.client.ChangeAlliance;
 import daniillnull.javacr.messages.client.CreateAlliance;
 import daniillnull.javacr.messages.client.ExecuteCmd;
@@ -8,6 +8,9 @@ import daniillnull.javacr.messages.client.GetAllianceData;
 import daniillnull.javacr.messages.client.GetHomeData;
 import daniillnull.javacr.messages.client.GetJoinableAlliances;
 import daniillnull.javacr.messages.client.GetProfileData;
+import daniillnull.javacr.messages.client.CancelMatchmake;
+import daniillnull.javacr.messages.client.CancelChallenge;
+import daniillnull.javacr.messages.client.CancelTournament;
 import daniillnull.javacr.messages.client.JoinAlliance;
 import daniillnull.javacr.messages.client.KeepAlive;
 import daniillnull.javacr.messages.client.LeaveAlliance;
@@ -24,9 +27,9 @@ import java.util.Arrays;
 
 public class MessageInputStream {
    public DataInputStream is;
-   public Crypt cr;
+   public CryptoRC4 cr;
 
-   public MessageInputStream(InputStream is, Crypt cr) {
+   public MessageInputStream(InputStream is, CryptoRC4 cr) {
       this.is = new DataInputStream(is);
       this.cr = cr;
    }
@@ -62,8 +65,17 @@ public class MessageInputStream {
       case 14104:
          p = new StartMission();
          break;
+      case 14107:
+         p = new CancelMatchmake();
+         break;
+      case 14111:
+         p = new CancelTournament();
+         break;
       case 14113:
          p = new GetProfileData();
+         break;
+      case 14123:
+         p = new CancelChallenge();
          break;
       case 14301:
          p = new CreateAlliance();

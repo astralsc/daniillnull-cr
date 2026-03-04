@@ -5,11 +5,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class KeepAliveOk extends Packet {
-   public KeepAliveOk() {
-      this.id = 20108;
+public class CancelChallengeDone extends Packet {
+   public CancelChallengeDone() {
+      this.id = 24124;
    }
-
+   
    public void process() throws IOException {
       ByteArrayOutputStream b = new ByteArrayOutputStream();
       DataOutputStream d = new DataOutputStream(b);

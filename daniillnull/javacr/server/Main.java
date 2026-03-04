@@ -1,6 +1,6 @@
 package daniillnull.javacr.server;
 
-import daniillnull.javacr.encryption2v.Crypt;
+import daniillnull.javacr.cryptorc4.CryptoRC4;
 import daniillnull.javacr.game.Alliance;
 import daniillnull.javacr.game.Player;
 import daniillnull.javacr.messages.MessageInputStream;
@@ -45,7 +45,7 @@ public class Main {
          Socket s = ss.accept();
          Session z = new Session();
          z.curr = new Thread(z);
-         z.cr = new Crypt();
+         z.cr = new CryptoRC4();
          z.is = new MessageInputStream(s.getInputStream(), z.cr);
          z.os = new MessageOutputStream(s.getOutputStream(), z.cr);
          z.curr.start();

@@ -1,6 +1,6 @@
 package daniillnull.javacr.server;
 
-import daniillnull.javacr.encryption2v.Crypt;
+import daniillnull.javacr.cryptorc4.CryptoRC4;
 import daniillnull.javacr.game.Alliance;
 import daniillnull.javacr.game.AllianceChatMessage;
 import daniillnull.javacr.game.Player;
@@ -14,6 +14,9 @@ import daniillnull.javacr.messages.client.GetAllianceData;
 import daniillnull.javacr.messages.client.GetHomeData;
 import daniillnull.javacr.messages.client.GetJoinableAlliances;
 import daniillnull.javacr.messages.client.GetProfileData;
+import daniillnull.javacr.messages.client.CancelMatchmake;
+import daniillnull.javacr.messages.client.CancelChallenge;
+import daniillnull.javacr.messages.client.CancelTournament;
 import daniillnull.javacr.messages.client.JoinAlliance;
 import daniillnull.javacr.messages.client.KeepAlive;
 import daniillnull.javacr.messages.client.LeaveAlliance;
@@ -33,6 +36,8 @@ import daniillnull.javacr.messages.server.KeepAliveOk;
 import daniillnull.javacr.messages.server.LoginOk;
 import daniillnull.javacr.messages.server.OwnHomeData;
 import daniillnull.javacr.messages.server.ProfileData;
+import daniillnull.javacr.messages.server.CancelMatchmakeDone;
+import daniillnull.javacr.messages.server.CancelChallengeDone;
 import daniillnull.javacr.messages.server.SectorState;
 import daniillnull.javacr.messages.server.SessionOk;
 import daniillnull.javacr.messages.server.UpdateResources;
@@ -44,7 +49,7 @@ public class Session implements Runnable {
    public Thread curr;
    public MessageInputStream is;
    public MessageOutputStream os;
-   public Crypt cr;
+   public CryptoRC4 cr;
    public Player player;
 
    public void run() {
@@ -67,12 +72,12 @@ public class Session implements Runnable {
    }
 
    public void work() throws Exception {
-      SessionReq rr = (SessionReq)this.is.read();
-      this.os.write(new SessionOk());
+      //SessionReq rr = (SessionReq)this.is.read();
+      //this.os.write(new SessionOk());
       Login login = (Login)this.is.read();
-      if (!Main.fingerPrintHash.isEmpty() && !rr.rhash.equals(Main.fingerPrintHash)) {
+      /*if (!Main.fingerPrintHash.isEmpty() && !rr.rhash.equals(Main.fingerPrintHash)) {
          this.os.write(new UpdateResources());
-      } else {
+      } else {*/
          this.player = Player.load(login.vid);
          this.player.current = this;
          this.os.write(new LoginOk(this.player.id));
@@ -95,6 +100,21 @@ public class Session implements Runnable {
             if (pk instanceof GetProfileData) {
                GetProfileData m = (GetProfileData)pk;
                this.os.write(new ProfileData(Player.load(m.uid)));
+            }
+
+            if (pk instanceof CancelMatchmake) {
+               CancelMatchmake m = (CancelMatchmake)pk;
+               this.os.write(new CancelMatchmakeDone());
+            }
+
+            if (pk instanceof CancelChallenge) {
+               CancelChallenge m = (CancelChallenge)pk;
+               this.os.write(new CancelChallengeDone());
+            }
+
+            if (pk instanceof CancelTournament) {
+               CancelTournament m = (CancelTournament)pk;
+               this.os.write(new CancelMatchmakeDone());
             }
 
             if (pk instanceof GetAllianceData) {
@@ -196,6 +216,6 @@ public class Session implements Runnable {
             }
          }
 
-      }
+      //}
    }
 }

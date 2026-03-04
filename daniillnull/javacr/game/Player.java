@@ -17,12 +17,13 @@ public class Player {
    private static HashMap<Integer, Player> players = new HashMap();
    public int id;
    public String name = "";
-   public byte lvl = 4;
-   public byte arena = 7;
+   public byte lvl = 8;
+   public byte xp = 0;
+   public byte arena = 1;
    public byte role = 1;
-   public int score = 4000;
-   public int gems = 1000000;
-   public int gold = 1000000;
+   public int score = 0;
+   public int gems = 1000000000;
+   public int gold = 1000000000;
    public int kickedfrom;
    public Alliance all;
    public Session current;
@@ -171,11 +172,11 @@ public class Player {
    }
 
    public void encodeEntry(DataOutput d) throws IOException {
-      d.write(0);
+      d.write(Packet.encodeVInt(0));
       d.write(Packet.encodeVInt(this.id));
-      d.write(0);
+      d.write(Packet.encodeVInt(0));
       d.write(Packet.encodeVInt(this.id));
-      d.write(0);
+      d.write(Packet.encodeVInt(0));
       d.write(Packet.encodeVInt(this.id));
       d.writeInt(this.name.length());
       d.write(this.name.getBytes());
@@ -187,20 +188,29 @@ public class Player {
       d.write(7);
       d.write(1);
       d.writeShort(1281);
-      d.write(Packet.encodeVInt(this.gold));
-      d.write(0);
-      d.write(0);
-      d.write(0);
+      d.write(Packet.encodeVInt(0)); // Resources
+      d.write(Packet.encodeVInt(2)); // Resources
+      {
+         d.write(Packet.encodeVInt(5)); // Type
+         d.write(Packet.encodeVInt(1)); // ID
+         d.write(Packet.encodeVInt(this.gold)); // Gold Amount
+         d.write(Packet.encodeVInt(5)); // Type
+         d.write(Packet.encodeVInt(5)); // ID
+         d.write(Packet.encodeVInt(this.gold)); // Gold Amount
+      }
+      d.write(Packet.encodeVInt(0));
+      d.write(Packet.encodeVInt(0));
       d.write(0);
       d.write(0);
       d.write(0);
       d.write(Packet.encodeVInt(this.gems));
       d.write(Packet.encodeVInt(this.gems));
-      d.write(new byte[]{0, this.lvl});
+      d.write(Packet.encodeVInt(this.xp));
+      d.write(Packet.encodeVInt(this.lvl));
       if (this.all != null) {
-         d.write(1);
+         d.write(1); // NameSet
          d.write(this.name.isEmpty() ? 8 : 9);
-         d.write(0);
+         d.write(Packet.encodeVInt(0));
          d.write(Packet.encodeVInt(this.all.id));
          d.writeInt(this.all.name.length());
          d.write(this.all.name.getBytes());
@@ -208,8 +218,8 @@ public class Player {
          d.write(Packet.encodeVInt(this.all.badge));
          d.write(this.role);
       } else {
-         d.write(0);
-         d.write(this.name.isEmpty() ? 0 : 1);
+         d.write(1); // NameSet
+         d.write(this.name.isEmpty() ? 0 : 7);
       }
 
    }

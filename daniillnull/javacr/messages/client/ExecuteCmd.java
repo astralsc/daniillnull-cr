@@ -38,6 +38,9 @@ public class ExecuteCmd extends Packet {
          readVInt(d);
          readVInt(d);
          switch(type) {
+         case 1:
+            System.out.println("Placing cards isn't serversided yet!");
+            return;
          case 500:
             int f = d.read();
             int t = d.read();
@@ -97,7 +100,7 @@ public class ExecuteCmd extends Packet {
          case 545:
             return;
          case 525:
-            s.os.write(new SectorState(s.player, 11));
+            s.os.write(new SectorState(s.player, 2));
             d.skip(2L);
             return;
          case 539:
