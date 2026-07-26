@@ -1,5 +1,5 @@
-# Null's Royale Leak
-An old 2017 leak of the Null's Royale source code, don't even use this for production because it is so bad and incomplete     
+# DRS - Daniillnull Royale Server
+An old 2017 leak of the DRS source code, don't even use this for production because it is so bad and incomplete     
 
 What I changed:
 - Fixed crashing problem
